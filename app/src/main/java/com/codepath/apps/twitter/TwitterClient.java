@@ -9,7 +9,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 /*
- * Description from video: deines all the endpoints that I'll access. Each method represents an API endpoint
+ * Description from video: defines all the endpoints that I'll access. Each method represents an API endpoint
  *
  *
  * This is the object responsible for communicating with a REST API. 
