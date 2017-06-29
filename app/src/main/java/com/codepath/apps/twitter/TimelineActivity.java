@@ -1,10 +1,14 @@
 package com.codepath.apps.twitter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.codepath.apps.twitter.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -50,6 +54,49 @@ public class TimelineActivity extends AppCompatActivity {
         populateTimeline();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Inflate the menu; this adds items to the action bar if it is present
+        getMenuInflater().inflate(R.menu.compose_tweet, menu);
+        return true;
+
+    }
+
+    // REQUEST_CODE can be any value we like, used to determine the result type later
+    final int REQUEST_CODE = 20;
+
+    public void onComposeAction(MenuItem mi) {
+
+        // handle click
+        mi.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+            public boolean onMenuItemClick(MenuItem item) {
+
+
+                // FirstActivity, launching an activity for a result
+                Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+                i.putExtra("mode", 2); // pass arbitrary data to launched activity
+                startActivityForResult(i, REQUEST_CODE);
+                return true;
+            }
+        });
+    }
+
+    // ActivityOne.java, time to handle the result of the sub-activity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            // Extract name value from result extras
+            String name = data.getExtras().getString("name");
+            int code = data.getExtras().getInt("code", 0);
+            // Toast the name to display temporarily on screen
+            Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
     private void populateTimeline() {
 
         // make the network request to get data from Twitter API
@@ -82,13 +129,7 @@ public class TimelineActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
-
-
                 }
-
-
             }
 
             @Override
@@ -111,3 +152,4 @@ public class TimelineActivity extends AppCompatActivity {
         });
     }
 }
+
