@@ -2,11 +2,13 @@ package com.codepath.apps.twitter.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 /**
  * Created by elliecorbus on 6/27/17.
  */
 
+@Parcel
 public class User {
 
     // list the attributes
