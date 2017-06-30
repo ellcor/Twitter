@@ -30,4 +30,13 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
         android:onClick="onSubmit"/>
+
+    <TextView
+        android:id="@+id/tvCharsRemaining"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btComposeTweet"
+        android:layout_alignBottom="@+id/btComposeTweet"
+        android:layout_toStartOf="@+id/btComposeTweet" />
+
 </RelativeLayout>
