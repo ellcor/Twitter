@@ -2,7 +2,9 @@
 
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
-
+        <item name="colorPrimary">@color/light_blue</item>
+        <item name="colorPrimaryDark">@color/light_blue</item>
+        <item name="colorAccent">@color/light_blue</item>
 
         <!--
 

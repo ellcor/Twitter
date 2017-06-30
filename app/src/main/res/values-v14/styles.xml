@@ -7,7 +7,9 @@
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
-        <item name="colorPrimary">#d3d3d3</item>
+        <item name="colorPrimary">@color/light_blue</item>
+        <item name="colorPrimaryDark">@color/light_blue</item>
+        <item name="colorAccent">@color/medium_red</item>
 
         <!-- API 14 theme customizations can go here. -->
     </style>
