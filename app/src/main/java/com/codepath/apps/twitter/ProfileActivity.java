@@ -26,42 +26,83 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // info for other users
+        String otherScreenName = getIntent().getStringExtra("NAME");
+        long userID = getIntent().getLongExtra("userID", 20);
+
         // get the screen name from the intent
         String screenName = getIntent().getStringExtra("screen_name");
 
-        // create the user fragment
-        UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screenName);
 
-        // display the user timeline fragment inside the container dynamically
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        // FRAGMENT STUFF
 
-        // make change
-        ft.replace(R.id.flContainer, userTimelineFragment);
-
-        // commit
-        ft.commit();
+        if (otherScreenName == null){
+            // create the user fragment
+            UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screenName);
+            // display the user timeline fragment inside the container dynamically
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            // make change
+            ft.replace(R.id.flContainer, userTimelineFragment);
+            // commit
+            ft.commit();
+        }
+        else
+        {
+            // create the user fragment
+            UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(otherScreenName);
+            // display the user timeline fragment inside the container dynamically
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            // make change
+            ft.replace(R.id.flContainer, userTimelineFragment);
+            // commit
+            ft.commit();
+        }
 
         client = TwitterApplication.getTwitterClient();
-        client.getUserInfo(new JsonHttpResponseHandler() {
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
-                // deserialize the User object
-                try {
-                    User user = User.fromJSON(response);
+        // calling own profile
+        if (otherScreenName == null){
+            client.getUserInfo(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
-                    // set the title of the ACtionBar based on the user info
-                    getSupportActionBar().setTitle(user.screenName);
+                    // deserialize the User object
+                    try {
+                        User user = User.fromJSON(response);
 
-                    // populate the user headline
-                    populateUserHeadline(user);
+                        // set the title of the ACtionBar based on the user info
+                        getSupportActionBar().setTitle(user.screenName);
+
+                        // populate the user headline
+                        populateUserHeadline(user);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-                catch (JSONException e) {
-                    e.printStackTrace();
+            });
+        }
+        else
+        {
+            client.getOtherUserTimeline(String.valueOf(userID), otherScreenName, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                    // deserialize the User object
+                    try {
+                        User user = User.fromJSON(response);
+
+                        // set the title of the ActionBar based on the user info
+                        getSupportActionBar().setTitle(user.screenName);
+
+                        // populate the user headline
+                        populateUserHeadline(user);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     public void populateUserHeadline(User user) {

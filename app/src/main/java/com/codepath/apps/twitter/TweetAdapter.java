@@ -1,6 +1,7 @@
 package com.codepath.apps.twitter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -58,7 +59,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         // get the data according to position
-        Tweet tweet = mTweets.get(position);
+        final Tweet tweet = mTweets.get(position);
 
         // populate the views according to this data
         holder.tvUsername.setText(tweet.user.name);
@@ -68,6 +69,21 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
 
         Glide.with(context).load(tweet.user.profileImageUrl).into(holder.ivProfileImage);
+
+        holder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (tweet.getUser().getScreenName() != null)
+                {
+                    Intent i = new Intent(context, ProfileActivity.class);
+                    i.putExtra("userID", tweet.getUser().getUid());
+                    i.putExtra("NAME", tweet.getUser().getScreenName());
+                    context.startActivity(i);
+                }
+            }
+
+        });
     }
 
     @Override
