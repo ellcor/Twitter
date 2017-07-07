@@ -7,10 +7,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.codepath.apps.twitter.fragments.TweetsListFragment;
 import com.codepath.apps.twitter.fragments.TweetsPagerAdapter;
+import com.codepath.apps.twitter.models.Tweet;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener {
 
 //    TweetsListFragment fragmentTweetsList;
 
@@ -41,6 +44,11 @@ public class TimelineActivity extends AppCompatActivity {
         // launch the profile view
         Intent i = new Intent (this, ProfileActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    public void onTweetSelected(Tweet tweet) {
+        Toast. makeText(this, tweet.body, Toast.LENGTH_LONG).show();
     }
 }
 
