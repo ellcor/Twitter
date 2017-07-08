@@ -25,6 +25,12 @@ import java.util.ArrayList;
 
 public class TweetsListFragment extends Fragment implements TweetAdapter.TweetAdapterListener {
 
+    public void onComposeNewTweet(Tweet tweet) {
+        tweets.add(0, tweet);
+        tweetAdapter.notifyItemInserted(0);
+        rvTweets.scrollToPosition(0);
+    }
+
     public interface TweetSelectedListener {
         // handle tweet selection
         public void onTweetSelected (Tweet tweet);

@@ -7,5 +7,6 @@
     <string name="intent_host">cprest</string>
     <string name="compose_title">Compose</string>
     <string name="name">Name</string>
+    <string name="item">Item</string>
 
 </resources>

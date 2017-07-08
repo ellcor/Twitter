@@ -13,9 +13,15 @@ import com.codepath.apps.twitter.fragments.TweetsListFragment;
 import com.codepath.apps.twitter.fragments.TweetsPagerAdapter;
 import com.codepath.apps.twitter.models.Tweet;
 
+import org.parceler.Parcels;
+
 public class TimelineActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener {
 
-//    TweetsListFragment fragmentTweetsList;
+    final int REQUEST_CODE = 20;
+    TweetsListFragment fragmentTweetsList;
+
+    ViewPager vpPager;
+    TweetsPagerAdapter tweetsPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +30,12 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
         setContentView(R.layout.activity_timeline);
 
         // get the view pager
-        ViewPager vpPager = (ViewPager) findViewById(R.id.viewpager);
+        vpPager = (ViewPager) findViewById(R.id.viewpager);
+
+        tweetsPagerAdapter = new TweetsPagerAdapter(getSupportFragmentManager(), this);
 
         // set the adapter for the pager
-        vpPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager(), this));
+        vpPager.setAdapter(tweetsPagerAdapter);
 
         // setup the TabLayout to use the view pager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
@@ -36,7 +44,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_timeline, menu);
+        getMenuInflater().inflate(R.menu.general_menu, menu);
         return true;
     }
 
@@ -50,60 +58,43 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
     public void onTweetSelected(Tweet tweet) {
         Toast. makeText(this, tweet.body, Toast.LENGTH_LONG).show();
     }
-}
+
 
 //
 //
 ////        fragmentTweetsList = (TweetsListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_timeline);
 //
-//    }
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//
-//        // Inflate the menu; this adds items to the action bar if it is present
-//        getMenuInflater().inflate(R.menu.compose_tweet, menu);
-//        return true;
-//
-//    }
-//
-//    // REQUEST_CODE can be any value we like, used to determine the result type later
-//    final int REQUEST_CODE = 20;
-//
-//    public void onComposeAction(MenuItem mi) {
-//
-//        // handle click
-//        mi.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//
-//            public boolean onMenuItemClick(MenuItem item) {
 //
 //
-//                // FirstActivity, launching an activity for a result
-//                Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
-//                startActivityForResult(i, REQUEST_CODE);
-//                return true;
-//            }
-//        });
-//    }
-//
-//    // ActivityOne.java, time to handle the result of the sub-activity
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        // REQUEST_CODE is defined above
-//        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-//            // Extract tweet from result extras
-//
-//            // the new tweet we just made
-//            Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
-//
-//
-//            // ^^ needs to be displayed in the RecyclerView of tweets
-//                    // which is in the TweetsListFragment
-//
-//            // send the tweet variable ^^ to TweetsListFragment
-//            fragmentTweetsList.onNewTweetAvailable(tweet);
-//
-//        }
-//    }
-//}
+    public void onComposeAction(MenuItem mi) {
+
+        // handle click
+        mi.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+            public boolean onMenuItemClick(MenuItem item) {
+
+                // FirstActivity, launching an activity for a result
+                Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+                startActivityForResult(i, REQUEST_CODE);
+                return true;
+            }
+        });
+    }
+
+
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            // Extract tweet from result extras
+
+            // the new tweet we just made
+            Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
+            int position = vpPager.getCurrentItem();
+            TweetsListFragment currentFragment = (TweetsListFragment) tweetsPagerAdapter.getRegisteredFragment(position);
+            currentFragment.onComposeNewTweet(tweet);
+
+        }
+    }
+}
 //
